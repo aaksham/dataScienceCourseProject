@@ -78,5 +78,13 @@ s<-split(merged_ag,list(merged_ag$Subject,merged_ag$Activity))
 ag<-sapply(s,function(x) colMeans(x))
 write.csv(ag,"AG.csv")
 agt<-base::t(ag)
-write.csv(agt,"TidyDataSet.csv")
-write.table(agt,"TidyDataSet.txt",row.name=FALSE)
+
+#Add the descriptive label of each activity
+activity_descr<-as.character()
+for (i in agt[,2]){
+        activity_descr<-rbind(activity_descr,activity_labels[i,2])
+}
+agt_final<-data.frame(agt,activity_descr,stringsAsFactors=FALSE)
+colnames(agt_final)<-c(names(merged),"ActivityLabelDescription")
+write.table(agt_final,"TidyDataSet.txt",row.name=FALSE)
+write.csv(agt_final,"TidyDataSet.csv")
